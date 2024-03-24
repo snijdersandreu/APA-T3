@@ -2,6 +2,11 @@
     Tercera tarea de APA - manejo de vectores
 
     Nombre y apellidos:
+        Adrián Fernández y Andreu Snijders
+        
+    Tests unitarios:
+    
+    >>> 
 """
 
 class Vector:
@@ -84,4 +89,36 @@ class Vector:
         """
 
         return -self + other
+    
+    """------------------------------------------------------"""
+    
+    def __mul__(self, other):
+        if isinstance(other,(int, float, complex)):
+            return Vector(element*other for element in self)
+        return Vector(a*b for a,b in zip(self, other))
+    
+    __rmul__ = __mul__ 
+    
+    def __matmul__(self, other):
+        return sum(v1*v2 for v1,v2 in zip(self, other))
 
+    __rmatmul__ = __matmul__
+    
+    def __call__(self):
+        """Devuelve el modulo del vector"""
+        return sum(a*a for a in self)**0.5 
+    
+    def __floordiv__(self, other):
+        """Devuelve la componente tangencial del primer vector respecto el segundo"""
+        return Vector((a*b*b)/(other()**2) for a,b in zip(self, other))
+    
+    __rfloordiv__ = __floordiv__
+    
+    def __mod__(self, other):
+        return Vector(self - self//other)
+    
+    __rmod__ = __mod__
+    
+    
+    
+    
