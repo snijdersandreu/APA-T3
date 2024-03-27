@@ -6,7 +6,22 @@
         
     Tests unitarios:
     
-    >>> 
+    >>> v1, v2 = Vector([1, 2, 3]), Vector([4, 5, 6])
+    >>> v1 * 2
+    Vector([2, 4, 6])
+    
+    >>> v1 * v2
+    Vector([4, 10, 18])
+    
+    >>> v1 @ v2
+    32
+    
+    >>> v1, v2 = Vector([2, 1, 2]), Vector([0.5, 1, 0.5])
+    >>> v1 // v2
+    Vector([1.0, 2.0, 1.0])
+    
+    >>> v1 % v2
+    Vector([1.0, -1.0, 1.0])
 """
 
 class Vector:
@@ -93,6 +108,10 @@ class Vector:
     """------------------------------------------------------"""
     
     def __mul__(self, other):
+        """
+        Devuelve el producto de Hadamard (vector formado por la multiplicación elemento a elemento
+        de dos vectores) o la multiplicación de un vector por un escalar.
+        """
         if isinstance(other,(int, float, complex)):
             return Vector(element*other for element in self)
         return Vector(a*b for a,b in zip(self, other))
@@ -100,25 +119,37 @@ class Vector:
     __rmul__ = __mul__ 
     
     def __matmul__(self, other):
+        """
+        Devuelve el producto escalar de dos vectores.
+        """
         return sum(v1*v2 for v1,v2 in zip(self, other))
 
     __rmatmul__ = __matmul__
     
     def __call__(self):
-        """Devuelve el modulo del vector"""
-        return sum(a*a for a in self)**0.5 
+        """
+        Devuelve el modulo al quadrado del vector
+        """
+        return sum(a*a for a in self) 
     
     def __floordiv__(self, other):
-        """Devuelve la componente tangencial del primer vector respecto el segundo"""
-        return Vector((a*b*b)/(other()**2) for a,b in zip(self, other))
+        """
+        Devuelve la componente paralela del vector v1 respecto el vector v2.
+        """
+        return ((self @ other) / other()) * other
     
     __rfloordiv__ = __floordiv__
     
     def __mod__(self, other):
-        return Vector(self - self//other)
+        """
+        Devuelve la componente normal del vector v1 respecto el vector v2.
+        """
+        return self - self // other
     
     __rmod__ = __mod__
     
-    
-    
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
     

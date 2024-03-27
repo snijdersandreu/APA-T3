@@ -76,11 +76,57 @@ Inserte a continuación una captura de pantalla que muestre el resultado de ejec
 fichero `algebra/vectores.py` con la opción *verbosa*, de manera que se muestre el
 resultado de la ejecución de los tests unitarios.
 
+![CapturaTest](/CapturaTest.jpg)
+
 #### Código desarrollado
 
 Inserte a continuación el código de los métodos desarrollados en esta tarea, usando los
 comandos necesarios para que se realice el realce sintáctico en Python del mismo (no
 vale insertar una imagen o una captura de pantalla, debe hacerse en formato *markdown*).
+
+```python
+    def __mul__(self, other):
+        """
+        Devuelve el producto de Hadamard (vector formado por la multiplicación elemento a elemento
+        de dos vectores) o la multiplicación de un vector por un escalar.
+        """
+        if isinstance(other,(int, float, complex)):
+            return Vector(element*other for element in self)
+        return Vector(a*b for a,b in zip(self, other))
+    
+    __rmul__ = __mul__ 
+    
+    def __matmul__(self, other):
+        """
+        Devuelve el producto escalar de dos vectores.
+        """
+        return sum(v1*v2 for v1,v2 in zip(self, other))
+
+    __rmatmul__ = __matmul__
+    
+    def __call__(self):
+        """
+        Devuelve el modulo al quadrado del vector
+        """
+        return sum(a*a for a in self) 
+    
+    def __floordiv__(self, other):
+        """
+        Devuelve la componente paralela del vector v1 respecto el vector v2.
+        """
+        return ((self @ other) / other()) * other
+    
+    __rfloordiv__ = __floordiv__
+    
+    def __mod__(self, other):
+        """
+        Devuelve la componente normal del vector v1 respecto el vector v2.
+        """
+        return self - self // other
+    
+    __rmod__ = __mod__
+
+```
 
 #### Subida del resultado al repositorio GitHub y *pull-request*
 
